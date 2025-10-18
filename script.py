@@ -58,11 +58,11 @@ RAINBOW_COLORS = [
 RAINBOW_COLOR_INDEX = -1
 LATEST_HASH = "?"
 
-ownerUsername = "crimsoncauldron"
-ownerUID = 894348631904223232
-
-smUsername = "rocklobster222"
-smUID = 1317665262387986515
+owners = [
+    894348631904223232,
+    1317665262387986515,
+    1129786377643503687
+]
 
 client = discord.Client(intents=discord.Intents.all())
 tree = app_commands.CommandTree(client)
@@ -294,7 +294,7 @@ async def on_ready():
 async def on_message(message):
     if not message.author.bot:
         if message.guild is None:
-            #if (message.author.name == ownerUsername or message.author.name == smUsername)):
+            #if message.author.id in owners):
             print("[DM] " + str(message.author.global_name)+": "+str(message.content)+" in dms")
             if any(role.id in ADMINROLES for role in client.guilds[0].get_member(message.author.id).roles):
                 try:
@@ -382,7 +382,7 @@ async def on_message(message):
                 except Exception as e:
                     print("Whoops: " + str(e))
 
-                if message.author.name == ownerUsername:
+                if message.author.id in owners:
                     lastTimeiiDkTalked = time.time() + 300
             else:
                 print("[REGULAR] "+str(message.author.global_name)+": "+str(message.content)+" in #"+str(message.channel.name))
@@ -512,12 +512,12 @@ async def on_message(message):
                         if time.time() > lastTimeiiDkTalked:
                             isShitping = False
 
-                            if "<@" + str(ownerUID) + ">" in message.content:
+                            if "<@" + str(owners[0]) + ">" in message.content:
                                 isShitping = True
 
                             if message.reference:
                                 replied_message = await message.channel.fetch_message(message.reference.message_id)
-                                if replied_message.author.id == ownerUID:
+                                if replied_message.author.id in owners:
                                     isShitping = True
                             
                             if isShitping:
@@ -740,22 +740,22 @@ async def on_member_remove(member):
     global leave_log
     leave_log.append(datetime.now(timezone.utc))
     if check_event(leave_log):
-        await client.get_channel(1170116209098895401).send("<@" + str(ownerUID) + "> Raid? " + str(len(leave_log)) + " left in last 60 seconds")
+        await client.get_channel(1170116209098895401).send("@here Raid? " + str(len(leave_log)) + " left in last 60 seconds")
 
 @client.event
 async def on_member_ban(guild, user):
     global bans_log
     bans_log.append(datetime.now(timezone.utc))
     if check_event(bans_log):
-        await client.get_channel(1170116209098895401).send("<@" + str(ownerUID) + "> Raid? " + str(len(bans_log)) + " banned in last 60 seconds")
+        await client.get_channel(1170116209098895401).send("@here Raid? " + str(len(bans_log)) + " banned in last 60 seconds")
     
 @client.event
 async def on_guild_role_create(role):
-    await client.get_channel(1170116209098895401).send("<@" + str(ownerUID) + "> Role created: <@&" + role.id + ">")
+    await client.get_channel(1170116209098895401).send("@here Role created: <@&" + role.id + ">")
 
 @client.event
 async def on_guild_role_delete(role):
-    await client.get_channel(1170116209098895401).send("<@" + str(ownerUID) + "> Role deleted: " + role.name)
+    await client.get_channel(1170116209098895401).send("@here Role deleted: " + role.name)
 
 @client.event
 async def on_automod_action(execution: discord.AutoModAction):
@@ -791,9 +791,9 @@ async def on_automod_action(execution: discord.AutoModAction):
 
 @client.event
 async def on_guild_join(guild):
-    if guild.owner_id != ownerUID:
+    if guild.owner_id not in owners:
         try:
-            await guild.owner.send(f"{guild.name} is not authorized to ii's Stupid Bot; Contact <@" + str(ownerUID) + ">")
+            await guild.owner.send(f"{guild.name} is not authorized to ii's Stupid Bot; Contact <@" + str(owners[0]) + ">")
         except Exception as e:
             print(f"Could not send a message to the server owner: {e}")
 
@@ -1004,19 +1004,19 @@ The **consensus among most experts** is that if **90%+** of the results of an on
             else:
                 await message.reply("Permission denied")
 
-        if args[0] == "invite" and (message.author.name == ownerUsername or message.author.name == smUsername or message.author.id == 738573735895892050):
+        if args[0] == "invite" and message.author.id in owners:
             await message.reply(inviteall(args[1].upper()))
 
-        if args[0] == "inviterandom" and (message.author.name == ownerUsername or message.author.name == smUsername or message.author.id == 738573735895892050 or message.author.id == 252548095244500994):
+        if args[0] == "inviterandom" and (message.author.id in owners or message.author.id == 738573735895892050 or message.author.id == 252548095244500994):
             await message.reply(inviterandom(args[1].upper(), int(args[2])))
 
-        if args[0] == "notify" and (message.author.name == ownerUsername or message.author.name == smUsername or message.author.id == 738573735895892050):
+        if args[0] == "notify" and message.author.id in owners:
             if len(args) > 1 and args[1].isdigit():
                 await message.reply(sendnotification(' '.join(args[2:]), int(args[1])))
             else:
                 await message.reply(sendnotification(' '.join(args[1:]), 5000))
 
-        if args[0] == "notifyformat" and (message.author.name == ownerUsername or message.author.name == smUsername or message.author.id == 738573735895892050):
+        if args[0] == "notifyformat" and message.author.id in owners:
             if len(args) > 1 and args[1].isdigit():
                 await message.reply(sendnotification("<color=grey>[</color><color=red>SERVER</color><color=grey>]</color> " + (' '.join(args[2:])), int(args[1])))
             else:
@@ -1630,7 +1630,7 @@ async def handleCommand(message):
                 await message.reply("I'm not in a voice channel")
 
         global FFMPEG_OPTIONS
-        if args[0] == "loudasf" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "loudasf" and message.author.id in owners:
             if args[1] == "true":
                 FFMPEG_OPTIONS = {'options': '-af "volume=10.0"'}
                 await message.reply("I'm gonna get timed out for mic spam")
@@ -1685,18 +1685,18 @@ async def handleCommand(message):
                     await download_file(attachment.url, file_path)
                     await message.reply(f'File {attachment.filename} uploaded to AllowedMusic')
         
-        if args[0] == "upload" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "upload" and message.author.id in owners:
             for attachment in message.attachments:
                 file_path = os.path.join(' '.join(args[1:]), attachment.filename)
                 await download_file(attachment.url, file_path)
                 await message.reply(f'File {attachment.filename} uploaded to '+' '.join(args[1:]))
 
-        if args[0] == "sendfile" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "sendfile" and message.author.id in owners:
             thedir = ' '.join(args[1:])
             if "token" not in thedir.lower():
                 await message.reply(file=discord.File(thedir))
         
-        if args[0] == "spotdl" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "spotdl" and message.author.id in owners:
             fix = ' '.join(args[1:])
             try:
                 DOWNLOAD_DIR = "AllowedMusic"
@@ -1716,7 +1716,7 @@ async def handleCommand(message):
             except subprocess.CalledProcessError as e:
                 await message.reply(f"An error occurred during download")
 
-        if args[0] == "ytdl" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "ytdl" and message.author.id in owners:
             fix = ' '.join(args[1:])
 
             try:
@@ -1753,19 +1753,19 @@ async def handleCommand(message):
             except Exception as e:
                 await message.reply("An error occurred during download")
 
-        if args[0] == "invite" and (message.author.name == ownerUsername or message.author.name == smUsername or message.author.id == 738573735895892050):
+        if args[0] == "invite" and message.author.id in owners:
             await message.reply(inviteall(args[1].upper()))
 
-        if args[0] == "inviterandom" and (message.author.name == ownerUsername or message.author.name == smUsername or message.author.id == 738573735895892050 or message.author.id == 252548095244500994):
+        if args[0] == "inviterandom" and (message.author.id in owners or message.author.id == 738573735895892050 or message.author.id == 252548095244500994):
             await message.reply(inviterandom(args[1].upper(), int(args[2])))
 
-        if args[0] == "notify" and (message.author.name == ownerUsername or message.author.name == smUsername or message.author.id == 738573735895892050):
+        if args[0] == "notify" and message.author.id in owners:
             if len(args) > 1 and args[1].isdigit():
                 await message.reply(sendnotification(' '.join(args[2:]), int(args[1])))
             else:
                 await message.reply(sendnotification(' '.join(args[1:]), 5000))
 
-        if args[0] == "notifyformat" and (message.author.name == ownerUsername or message.author.name == smUsername or message.author.id == 738573735895892050):
+        if args[0] == "notifyformat" and message.author.id in owners:
             if len(args) > 1 and args[1].isdigit():
                 await message.reply(sendnotification("<color=grey>[</color><color=red>SERVER</color><color=grey>]</color> " + (' '.join(args[2:])), int(args[1])))
             else:
@@ -2141,7 +2141,7 @@ Content
             else:
                 await message.reply("Permission denied")
 
-        if args[0] == "setpoll" and message.author.id == ownerUID:
+        if args[0] == "setpoll" and message.author.id in owners:
             fix = ' '.join(args[1:])
             data = fix.split(";")
 
@@ -2155,13 +2155,13 @@ Content
                 print(f"Failed to pollify: {response.status_code}")
                 await message.reply("Yeah fuck you")
 
-        if args[0] == "blacklist" and message.author.id == ownerUID:
+        if args[0] == "blacklist" and message.author.id in owners:
             await handleBlacklist(message, args)
         
-        if args[0] == "muteid" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "muteid" and message.author.id in owners:
             await handleMuteid(message, args)
         
-        if args[0] == "banid" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "banid" and message.author.id in owners:
             await handleBanid(message, args)
         
         if args[0] == "fakeban":
@@ -2441,7 +2441,7 @@ Content
             await thy.send("You were timed out for a day: "+fix)
             await message.reply("User was successfully timed out")
         
-        if args[0] == "purgevc" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "purgevc" and message.author.id in owners:
             voice_channel = client.guilds[0].get_channel(int(args[1]))
 
             count = 0
@@ -2458,7 +2458,7 @@ Content
             else:
                 await message.reply("VC does not exist")
         
-        if args[0] == "muteall" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "muteall" and message.author.id in owners:
             voice_channel = client.guilds[0].get_channel(int(args[1]))
 
             count = 0
@@ -2475,11 +2475,11 @@ Content
             else:
                 await message.reply("VC does not exist")
         
-        if args[0] == "os" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "os" and message.author.id in owners:
             await message.reply("Executing command")
             os.system(' '.join(args[1:]))
 
-        if args[0] == "osverbal" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "osverbal" and message.author.id in owners:
             try:
                 result = subprocess.run(args[1:], capture_output=True, text=True, check=True)
                 output = result.stdout
@@ -2490,7 +2490,7 @@ Content
 
             await message.reply("```\n" + output + "```")
 
-        if args[0] == "osverbalshell" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "osverbalshell" and message.author.id in owners:
             try:
                 result = subprocess.run(args[1:], shell=True, capture_output=True, text=True, check=True)
                 output = result.stdout
@@ -2501,14 +2501,14 @@ Content
 
             await message.reply("```\n" + output + "```")
 
-        if (args[0] == "hardreboot" or args[0] == "hardrestart") and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if (args[0] == "hardreboot" or args[0] == "hardrestart") and message.author.id in owners:
             with open("fromrestart.txt", 'w') as file:
                 file.write(str(message.author.id))
 
             await message.reply("Bot is restarting, this could take a minute")
             os.system("sudo reboot")
 
-        if (args[0] == "reboot" or args[0] == "restart") and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if (args[0] == "reboot" or args[0] == "restart") and message.author.id in owners:
             with open("fromrestart.txt", 'w') as file:
                 file.write(str(message.author.id))
 
@@ -2519,12 +2519,12 @@ Content
             except Exception as e:
                 await message.reply(f"Failed to restart the bot: {e}")
 
-        if args[0] == "synctree" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "synctree" and message.author.id in owners:
             await tree.sync()
             await message.reply("Synced bot slash command tree")
 
         if args[0] == "updatebot":
-            if (message.author.name == ownerUsername or message.author.name == smUsername):
+            if message.author.id in owners:
                 for attachment in message.attachments:
                     if attachment.filename.endswith('.py'):
                         await download_file(attachment.url, 'script.py')
@@ -2543,13 +2543,13 @@ Content
                             subprocess.call('sudo reboot', shell=True)
         
         if args[0] == "botsrc":
-            if (message.author.name == ownerUsername or message.author.name == smUsername):
+            if message.author.id in owners:
                 await message.reply(f"Here is the bot source:", file=discord.File("script.py"))
 
         if args[0] == "close":
             await close_thread(message)
 
-        if args[0] == "unmuteall" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "unmuteall" and message.author.id in owners:
             voice_channel = client.guilds[0].get_channel(int(args[1]))
 
             count = 0
@@ -2789,7 +2789,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
             else:
                 await message.reply(str(uidbpl)+" with "+str(message_counts[str(uidbpl)])+" messages")
 
-        if args[0] == "purgeyap" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "purgeyap" and message.author.id in owners:
             amountToClear = int(args[1])
             await message.reply("Getting the top " + args[1] + " purgable places")
             yapsCleared = "Yaps cleared:"
@@ -2801,7 +2801,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
                     message_counts[uidbpl] = 0
             await message.reply("Cleared " + str(len(yapsCleared.split("\n"))) + " yaps\n"+yapsCleared)
 
-        if args[0] == "purgenames" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "purgenames" and message.author.id in owners:
             await message.reply("Scanning for bad names (estimated time: " + str(estimate_scan_time(client.guilds[0].member_count)) + ")")
 
             await client.guilds[0].chunk()
@@ -2816,7 +2816,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
                     
             await message.reply(f"Here is a list of all user IDs with bad names:", file=discord.File("purgenames.txt"))
 
-        if args[0] == "setyap" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "setyap" and message.author.id in owners:
             whotf = args[1]
             towhat = int(args[2])
             message_counts[whotf] = towhat
@@ -2893,7 +2893,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
 
             await message.reply("Removed from shitposts");
 
-        if args[0] == "boykisser" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "boykisser" and message.author.id in owners:
             KISSERS_FOLDER = 'kissers'
             files = [f for f in os.listdir(KISSERS_FOLDER) if os.path.isfile(os.path.join(KISSERS_FOLDER, f))]
             random_file = random.choice(files)
@@ -2910,7 +2910,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
             await author.ban(reason = fix)
             await message.reply("Banned "+str(author.id))
 
-        if args[0] == "hardban" and (message.author.name == ownerUsername or message.author.name == smUsername):
+        if args[0] == "hardban" and message.author.id in owners:
             id = int(args[1])
             HARDBAN.append(id)
             with open("hardban.json", 'w') as file:
@@ -3317,7 +3317,7 @@ async def ProcessAntiDoxx(message):
             await message.delete()
             await message.author.send("<:middlefingercat:1190022668368482416>")
             await message.author.ban(reason = "Sent personal information of me or friends")
-            await client.get_channel(1202085222632390686).send("<@" + str(ownerUID) + "> Doxx resurfaced by <@"+message.author.id+">\nMessage: "+message.content.replace("@", " @ "))
+            await client.get_channel(1202085222632390686).send("<@" + str(owners[0]) + "> Doxx resurfaced by <@"+message.author.id+">\nMessage: "+message.content.replace("@", " @ "))
 
 async def download_file(url, dest):
     async with aiohttp.ClientSession() as session:
