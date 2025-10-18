@@ -61,7 +61,8 @@ LATEST_HASH = "?"
 owners = [
     894348631904223232,
     1317665262387986515,
-    1129786377643503687
+    1129786377643503687,
+    738573735895892050 # twig
 ]
 
 client = discord.Client(intents=discord.Intents.all())
