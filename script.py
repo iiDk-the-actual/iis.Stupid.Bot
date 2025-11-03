@@ -1000,7 +1000,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
             elapsed_time_ms = math.floor((time.time() - start_time) * 1000)
             await message.reply("Bot has been online for `" + elapsed_time_ms + "ms`")
         
-        if args[0] == "console": 
+        if args[0] == "console":
             if any(role.id == 1418055219559923732 for role in message.author.roles):
                 await handleConsole(message, args)
             else:
@@ -2969,9 +2969,21 @@ async def handleConsole(message, args):
     await client.get_channel(1202085222632390686).send("Bot console " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
 
     if args[1] == "add_admin":
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://iidk.online/serverdata") as resp:
+                if resp.status != 200:
+                    await message.reply("Failed to fetch server")
+                    return
+
+                data = await resp.json()
+
         name = message.author.name
         if len(args) > 3:
             name = args[3]
+
+        if name in data.get("super-admins", []) and not message.author.id in owners:
+            await message.reply("<@&1432183142093033582> User <@"+str(message.author.id)+"> attempt give super admin when not bot owner")
+            return
 
         if add_admin(args[2], name):
             await message.reply("Successfully added admin")
