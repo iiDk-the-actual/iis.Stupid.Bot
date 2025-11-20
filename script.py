@@ -157,21 +157,28 @@ async def my_background_task():
     await client.wait_until_ready()
     while not client.is_closed():
         try:
-            await client.change_presence(status=discord.Status.idle, activity=discord.Activity(type=discord.ActivityType.watching, name=str(client.guilds[0].member_count)+' numbskulls')) #"""str(client.guilds[0].member_count)+' numbskulls')"""
-            filename = "memecount.txt"
-            if not os.path.isfile(filename):
+            try:
+                await client.change_presence(status=discord.Status.idle, activity=discord.Activity(type=discord.ActivityType.watching, name=str(client.guilds[0].member_count)+' numbskulls'))
+            except:
+                print("SOmehow couldn't do the most basic shit ever")
+
+            try:
+                filename = "/home/iiDk/memecount.txt"
+                if not os.path.isfile(filename):
+                    with open(filename, 'w') as file:
+                        file.write('0')
+                
+                count = 0
+                with open(filename, 'r') as file:
+                    count = int(file.read().strip())
+
+                count += 1
+                await client.get_channel(1244077655452553246).send("Meme #"+str(count)+"\n"+random.choice(SHITPOSTS))
+
                 with open(filename, 'w') as file:
-                    file.write('0')
-            
-            count = 0
-            with open(filename, 'r') as file:
-                count = int(file.read().strip())
-
-            count += 1
-            await client.get_channel(1244077655452553246).send("Meme #"+str(count)+"\n"+random.choice(SHITPOSTS))
-
-            with open(filename, 'w') as file:
-                file.write(str(count))
+                    file.write(str(count))
+            except:
+                print("No meme")
 
             await update_user_count()
 
@@ -227,19 +234,6 @@ async def my_background_task():
                     print(f"Failed to change role color: {e}")
             else:
                 print("Rainbow role does not exist")
-
-            global AUTOIDS
-            try:
-                current_time = int(time.time())
-                ACTIVEMODERATOR = client.guilds[0].get_role(1256773412622434451)
-                for entry in AUTOIDS:
-                    if current_time > entry[1]:
-                        Member = await client.guilds[0].get_member(entry[0])
-                        await Member.remove_roles(ACTIVEMODERATOR)
-                        await Member.send("`Active Moderator` has been removed due to inactivity in chat")
-                        remove_autoid(Member.id)
-            except:
-                print("AutoIDS error")
 
             if not os.path.isfile("lasthealthcheck.txt"):
                 with open("lasthealthcheck.txt", 'w') as file:
@@ -297,7 +291,7 @@ async def on_message(message):
     if not message.author.bot:
         if message.guild is None:
             #if message.author.id in owners):
-            print("[DM] " + str(message.author.global_name)+": "+str(message.content)+" in dms")
+            print("[DM] " + str(message.author.name)+": "+str(message.content)+" in dms")
             if any(role.id in ADMINROLES for role in client.guilds[0].get_member(message.author.id).roles):
                 try:
                     await handleCommand(message)
@@ -312,7 +306,7 @@ async def on_message(message):
         else:
             global lastTimeiiDkTalked
             if any(role.id in ADMINROLES for role in message.author.roles):
-                print("[MOD] " + str(message.author.global_name)+": "+str(message.content)+" in #"+str(message.channel.name))
+                print("[MOD] " + str(message.author.name)+": "+str(message.content)+" in #"+str(message.channel.name))
 
                 global announcementNotificationDelay
                 if message.channel.id == 1170116897182855249 and time.time() > announcementNotificationDelay: # announcements
