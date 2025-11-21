@@ -10,10 +10,13 @@
 import discord
 import asyncio
 import os
+import json
+from datetime import datetime
 import sys
 import time
 import yt_dlp
 import random
+import re
 import base64
 import json
 import math
@@ -1442,6 +1445,31 @@ The **consensus among most experts** is that if **90%+** of the results of an on
             else:
                 await message.reply("**You do not have the Ultimate Tracker les.**\nSubscribe to the Patreon to get the role: <https://patreon.com/iiDk>")
 
+        if args[0] == "advancedsearch":
+            isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
+
+            if isUltimateTracker:
+                if message.channel.id != 1354619115486187682: # ultimate-tracker
+                    await message.reply("This command only works in the <#1354619115486187682> channel")
+                else:
+                    try:
+                        data = sql(build_select_query(args[1]))
+                        if data:
+                            replyText = "```\n" + data + "\n```"
+                            if len(replyText) > 2000:
+                                with open("advancedsearch.txt", 'w') as file:
+                                    file.write(replyText)
+                                        
+                                await message.reply(file=discord.File("advancedsearch.txt"))
+                            else:
+                                await message.reply(replyText)
+                        else:
+                            await message.reply("No data found")
+                    except Exception as e:
+                        await message.reply(f"An error occurred")
+            else:
+                await message.reply("**You do not have the Ultimate Tracker les.**\nSubscribe to the Patreon to get the role: <https://patreon.com/iiDk>")
+
         if args[0] == "playermap":
             isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
 
@@ -2309,6 +2337,23 @@ Content
                             file.write(replyText)
                                 
                         await message.reply(file=discord.File("lookupdb.txt"))
+                    else:
+                        await message.reply(replyText)
+                else:
+                    await message.reply("No data found")
+            except Exception as e:
+                await message.reply(f"An error occurred")
+
+        if args[0] == "advancedsearch":
+            try:
+                data = sql(build_select_query(args[1]))
+                if data:
+                    replyText = "```\n" + data + "\n```"
+                    if len(replyText) > 2000:
+                        with open("advancedsearch.txt", 'w') as file:
+                            file.write(replyText)
+                                
+                        await message.reply(file=discord.File("advancedsearch.txt"))
                     else:
                         await message.reply(replyText)
                 else:
@@ -3313,7 +3358,7 @@ def search_db(uid):
     url = "https://iidk.online/getuserdata"
     body = {"key": authenticationkey, "uid": uid}
     
-    response = requests.get(url, json=body, timeout=5)
+    response = requests.get(url, json=body, timeout=20)
     if response.status_code == 200:
         data = response.json()
 
@@ -3450,6 +3495,108 @@ def removeblacklisted(iddd):
         print(f"Failed to fetch data: {response.status_code}")
         return "Failed to fetch data"
 
+def format_rows(json_string):
+    """
+    Takes a JSON string with a structure like:
+    {"status": 200, "rows": [{...}, {...}, ...]}
+    and formats all rows into a single string, separated by two newlines.
+    """
+    try:
+        data = json.loads(json_string)
+    except json.JSONDecodeError:
+        return "Invalid JSON"
+
+    rows = data.get("rows", [])
+    formatted_rows = []
+
+    for row in rows:
+        uid = row.get("id", "NULL")
+        nickname = row.get("nickname", "NULL")
+        room = row.get("room", "NULL")
+        cosmetics = row.get("cosmetics", "NULL")
+        color = row.get("color", "NULL")
+        platform = row.get("platform", "NULL")
+        timestamp = row.get("timestamp", 0)
+
+        formatted = f"""User
+    {nickname}
+    {uid}
+    {platform}
+    {color}
+Cosmetics
+    {cosmetics}
+Last Seen
+    {room} on {unix_timestamp_to_date(timestamp)}"""
+        formatted_rows.append(formatted)
+
+    # Join all entries with two newlines
+    return "\n\n".join(formatted_rows)
+
+def build_select_query(param_string: str) -> str:
+    # Parse key=value pairs
+    pairs = []
+    for part in param_string.split(","):
+        if "=" not in part:
+            continue
+        key, val = part.split("=", 1)
+        key = key.strip().lower()
+
+        match key:
+            case "name":
+                key = "nickname"
+            case "nickname":
+                key = "nickname"
+            case "id":
+                key = "id"
+            case "room":
+                key = "room"
+            case "cosmetics":
+                key = "cosmetics"
+            case "color":
+                key = "color"
+            case "platform":
+                key = "platform"
+            case "device":
+                key = "platform"
+            case _:
+                return "Not a valid indexable parameter: " + re.sub(r"[^A-Za-z0-9]", "", key)[:24]
+
+        val = val.strip().strip('"').upper()  # remove optional quotes
+        
+        # Clean value: allow only alphanumeric
+        cleaned = re.sub(r"[^A-Za-z0-9]", "", val)
+        cleaned = cleaned[:24]  # max length
+        
+        if cleaned:
+            pairs.append((key, cleaned))
+    
+    if not pairs:
+        raise ValueError("No valid parameters provided.")
+    
+    # Build WHERE clauses
+    conditions = [f'{k}="{v}"' for k, v in pairs]
+
+    where_clause = " AND ".join(conditions)
+    
+    query = f'SELECT * FROM records WHERE {where_clause} ORDER BY timestamp DESC LIMIT 50;'
+    
+    return query
+
+def sql(uid):
+    if ("Not a " in uid):
+        return uid
+    
+    url = "https://iidk.online/sql"
+    body = {"key": authenticationkey, "query": uid}
+    
+    response = requests.get(url, json=body, timeout=20)
+    if response.status_code == 200:
+        data = json.dumps(response.json())
+        return format_rows(data)
+    else:
+        print(f"Failed to fetch data: {response.status_code}")
+        return "Failed to fetch data"
+    
 def search_cosmetics(data, search_string):
     outputString = ""
     if not data or "activeUserData" not in data:
