@@ -535,17 +535,6 @@ async def on_message(message):
 
                 if message.channel.id == 1170117473912238150: # downloads
                     await message.add_reaction("✅")
-				'''
-                if message.channel.id == 1171952144904101959 or message.channel.id == 1411512805672222811: # reviews
-                    if '/' not in str(message.content):
-                        await handle_non_review(message)
-                    
-                    if "https://" in str(message.content) and ("youtu.be" in str(message.content) or "youtube.com" in str(message.content)) and ("shorts" not in str(message.content) and "dQw4w9WgXcQ" not in str(message.content)):
-                        menureviewerrole = client.guilds[0].get_role(1177463486381563994)
-                        await message.author.add_roles(menureviewerrole)
-                        await client.get_channel(1202085222632390686).send("User <@" + message.author.id + "> reviewed menu\nMessage: https://discord.com/channels/"+str(client.guilds[0].id)+"/"+str(message.channel.id)+"/"+str(message.id))
-                        await message.author.send("You have been given the Menu Reviewer role for reviewing the menu, thank you for the support!")
-				'''
 
                 if message.channel.id == 1171208586911825920: # new members
                     names = ['member', 'creature', 'thing', 'thingamabob', 'annoyance', 'subject', 'test subject', 'guy', 'human', 'huwoman', 'living thing', 'individual', 'person', 'being', 'citizen', 'resident', 'inhabitant', 'folk', 'soul', 'character', 'figure', 'entity', 'participant', 'individualist', 'someone', 'somebody', 'human being']
