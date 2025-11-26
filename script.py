@@ -3146,7 +3146,7 @@ def check_event(log):
     now = datetime.now(timezone.utc)
     while log and (now - log[0]) > timedelta(seconds=60):
         log.popleft()
-    return len(log) >= 5
+    return len(log) >= 10
 
 def get_string_number(username):
     for string_number, mc_username in mc_verified.items():
