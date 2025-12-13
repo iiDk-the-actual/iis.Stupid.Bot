@@ -3380,7 +3380,7 @@ def getplayermap():
     url = "https://iidk.online/playermap"
     body = {"key": authenticationkey}
     
-    response = requests.get(url, json=body, timeout=5)
+    response = requests.get(url, json=body, timeout=60)
     if response.status_code == 200:
         data = response.json()
 
@@ -3579,7 +3579,7 @@ def sql(uid):
     url = "https://iidk.online/sql"
     body = {"key": authenticationkey, "query": uid}
     
-    response = requests.get(url, json=body, timeout=20)
+    response = requests.get(url, json=body, timeout=60)
     if response.status_code == 200:
         data = json.dumps(response.json())
         return format_rows(data)
