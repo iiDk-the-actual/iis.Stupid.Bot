@@ -3350,7 +3350,11 @@ async def checkMemberName(member):
 
     try:
         for word in bannedNameKeywords:
-            if word in member.name.lower() or word in member.global_name.lower() or word in member.nick.lower():
+            member_name = member.name.lower() if member.name else ""
+            global_name = member.global_name.lower() if getattr(member, "global_name", None) else ""
+            nick = member.nick.lower() if member.nick else ""
+
+            if word in member_name or word in global_name or word in nick:
                 violations.append(f"violating name ({word})")
     except Exception as e:
         print(f"Failed to fetch name: {e}")
