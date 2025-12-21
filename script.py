@@ -1304,7 +1304,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
                         else "Null"
                     )
                     url = "https://iidk.online/addpatreon"
-                    body = {"key": authenticationkey, "id": args[0], "discord": message.author.id, "name": roleName, "icon": message.author.avatar.url}
+                    body = {"key": authenticationkey, "id": args[1], "discord": message.author.id, "name": roleName, "icon": message.author.avatar.url}
                     
                     response = requests.post(url, json=body, timeout=5)
                     if response.status_code == 200:
@@ -2354,7 +2354,7 @@ Content
                 else "Null"
             )
             url = "https://iidk.online/addpatreon"
-            body = {"key": authenticationkey, "id": args[0], "discord": message.author.id, "name": roleName, "icon": message.author.avatar.url}
+            body = {"key": authenticationkey, "id": args[1], "discord": message.author.id, "name": roleName, "icon": message.author.avatar.url}
             
             response = requests.post(url, json=body, timeout=5)
             if response.status_code == 200:
