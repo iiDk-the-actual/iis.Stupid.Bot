@@ -1288,6 +1288,57 @@ The **consensus among most experts** is that if **90%+** of the results of an on
         if args[0] == "getyapcount":
             await message.reply("You have sent "+str(message_counts[str(message.author.id)])+" messages ("+str(get_place_by_userid(str(message.author.id)))+"th place).")
 
+        if args[0] == "link":
+            isDonor = any(role.id == 1354610628580347944 for role in message.author.roles)
+            isSupporter = any(role.id == 1354611031141253211 for role in message.author.roles)
+            isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
+            isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
+
+            if (isDonor or isSupporter or isBasicTracker or isUltimateTracker):
+                if message.channel.id == 1170852764725805148:
+                    roleName = (
+                        "Ultimate Tracker" if isUltimateTracker
+                        else "Basic Tracker" if isBasicTracker
+                        else "Supporter" if isSupporter
+                        else "Donor" if isDonor
+                        else "Null"
+                    )
+                    url = "https://iidk.online/addpatreon"
+                    body = {"key": authenticationkey, "id": args[0], "discord": message.author.id, "name": roleName, "icon": message.author.avatar.url}
+                    
+                    response = requests.post(url, json=body, timeout=5)
+                    if response.status_code == 200:
+                        await message.reply("**Successfully linked account!**\nYour special role will now show above your head for anyone else with the menu.\n\nRole: **"+roleName+"**\nIcon: "+message.author.avatar.url+"\n-# Changes may take up to 60 seconds to take place")
+                    else:
+                        print(f"Failed to link account: {response.status_code}")
+                        await message.reply("Failed to link account")
+                else:
+                    await message.reply("This command only works in the <#1449517795485286420> channel")
+            else:
+                await message.reply("**You either are not subscribed to the Patreon, or do not have your Patreon account linked.**\nSubscribe to the Patreon to link your account: <https://patreon.com/iiDk>")
+
+        if args[0] == "unlink":
+            isDonor = any(role.id == 1354610628580347944 for role in message.author.roles)
+            isSupporter = any(role.id == 1354611031141253211 for role in message.author.roles)
+            isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
+            isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
+
+            if (isDonor or isSupporter or isBasicTracker or isUltimateTracker):
+                if message.channel.id == 1170852764725805148:
+                    url = "https://iidk.online/removepatreon"
+                    body = {"key": authenticationkey, "id": message.author.id}
+                    
+                    response = requests.post(url, json=body, timeout=5)
+                    if response.status_code == 200:
+                        await message.reply("**Successfully unlinked account.**\nYour special role will no longer show above your head.\n-# Changes may take up to 60 seconds to take place")
+                    else:
+                        print(f"Failed to unlink account: {response.status_code}")
+                        await message.reply("Failed to unlink account")
+                else:
+                    await message.reply("This command only works in the <#1449517795485286420> channel")
+            else:
+                await message.reply("**You either are not subscribed to the Patreon, or do not have your Patreon account linked.**\nSubscribe to the Patreon to link your account: <https://patreon.com/iiDk>")
+
         if args[0] == "lookupnick":
             isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
             isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
@@ -2289,6 +2340,40 @@ Content
             else:
                 await message.reply("No data found")
         
+        if args[0] == "link":
+            isDonor = any(role.id == 1354610628580347944 for role in message.author.roles)
+            isSupporter = any(role.id == 1354611031141253211 for role in message.author.roles)
+            isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
+            isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
+
+            roleName = (
+                "Ultimate Tracker" if isUltimateTracker
+                else "Basic Tracker" if isBasicTracker
+                else "Supporter" if isSupporter
+                else "Donor" if isDonor
+                else "Null"
+            )
+            url = "https://iidk.online/addpatreon"
+            body = {"key": authenticationkey, "id": args[0], "discord": message.author.id, "name": roleName, "icon": message.author.avatar.url}
+            
+            response = requests.post(url, json=body, timeout=5)
+            if response.status_code == 200:
+                await message.reply("**Successfully linked account!**\nYour special role will now show above your head for anyone else with the menu.\n\nRole: **"+roleName+"**\nIcon: "+message.author.avatar.url+"\n-# Changes may take up to 60 seconds to take place")
+            else:
+                print(f"Failed to link account: {response.status_code}")
+                await message.reply("Failed to link account")
+
+        if args[0] == "unlink":
+            url = "https://iidk.online/removepatreon"
+            body = {"key": authenticationkey, "id": message.author.id}
+            
+            response = requests.post(url, json=body, timeout=5)
+            if response.status_code == 200:
+                await message.reply("**Successfully unlinked account.**\nYour special role will no longer show above your head.\n-# Changes may take up to 60 seconds to take place")
+            else:
+                print(f"Failed to unlink account: {response.status_code}")
+                await message.reply("Failed to unlink account")
+
         if args[0] == "lookupnick":
             data = fetch_data()
             if data:
@@ -3440,7 +3525,7 @@ def remove_admin(idd):
     else:
         print(f"Failed to add admin: {response.status_code}")
         return False
-    
+
 def inviteall(room):
     url = "https://iidk.online/inviteall"
     body = {"key": authenticationkey, "to": room}
