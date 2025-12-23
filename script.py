@@ -2591,7 +2591,7 @@ Content
 
         if args[0] == "osverbal" and message.author.id in owners:
             try:
-                result = subprocess.run(args[1:], capture_output=True, text=True, check=True)
+                result = subprocess.run(args[1:], capture_output=True, text=True, check=True, timeout=10)
                 output = result.stdout
             except subprocess.CalledProcessError as e:
                 output = f"Command failed:\n{e.stderr}"
@@ -2602,7 +2602,7 @@ Content
 
         if args[0] == "osverbalshell" and message.author.id in owners:
             try:
-                result = subprocess.run(args[1:], shell=True, capture_output=True, text=True, check=True)
+                result = subprocess.run(args[1:], shell=True, capture_output=True, text=True, check=True, timeout=10)
                 output = result.stdout
             except subprocess.CalledProcessError as e:
                 output = f"Command failed:\n{e.stderr}"
