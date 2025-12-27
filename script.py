@@ -404,7 +404,7 @@ async def on_message(message):
                     global lastTimeRepliedDM
                     if founddaword and not ("not" in message.content.lower() or "isnt" in message.content.lower() or "isn\'t" in message.content.lower()):
                         if (time.time() > lastTimeRepliedDM):
-                            await message.reply("# The menu is not malware.\nThe false detections are caused from loading the version and saving your preferences to a local file.\nIf you don't believe this, you can check the source code for yourself: <https://github.com/iiDk-the-actual/iis.Stupid.Menu>\nYou can fix this by excluding ii's Stupid Menu from your anvirus. A tutorial can be found here: https://discord.com/channels/1170093288557129748/1433191399540523099\n\n`This message is automated. If this was not what you were looking for, ignore this message.`")
+                            await message.reply("# The menu is not malware.\nThe false detections are caused from loading the version and saving your preferences to a local file.\nIf you don't believe this, you can check the source code for yourself: <https://github.com/iiDk-the-actual/iis.Stupid.Menu>\nYou can fix this by excluding ii's Stupid Menu from your antivirus. A tutorial can be found here: https://discord.com/channels/1170093288557129748/1433191399540523099\n\n`This message is automated. If this was not what you were looking for, ignore this message.`")
                             #await message.author.timeout(timedelta(minutes=1), reason = "Auto timeout from rat word detection")
                             lastTimeRepliedDM = time.time() + 15
 
@@ -632,7 +632,7 @@ async def on_message_edit(oldmessage, message): # this is the EDIT
                     global lastTimeRepliedDM
                     if founddaword and not ("not" in message.content.lower() or "isnt" in message.content.lower() or "isn\'t" in message.content.lower()):
                         if (time.time() > lastTimeRepliedDM):
-                            await message.reply("# The menu is not malware.\nThe false detections are caused from loading the version and saving your preferences to a local file.\nIf you don't believe this, you can check the source code for yourself: <https://github.com/iiDk-the-actual/iis.Stupid.Menu>\n\n`This message is automated. If this was not what you were looking for, ignore this message.`")
+                            await message.reply("# The menu is not malware.\nThe false detections are caused from loading the version and saving your preferences to a local file.\nIf you don't believe this, you can check the source code for yourself: <https://github.com/iiDk-the-actual/iis.Stupid.Menu>\nYou can fix this by excluding ii's Stupid Menu from your antivirus. A tutorial can be found here: https://discord.com/channels/1170093288557129748/1433191399540523099\n\n`This message is automated. If this was not what you were looking for, ignore this message.`")
                             #await message.author.timeout(timedelta(minutes=1), reason = "Auto timeout from rat word detection")
                             lastTimeRepliedDM = time.time() + 15
 
@@ -919,7 +919,7 @@ async def handleUserCommand(message):
             await message.reply("Please read the frequently asked questions before continuing: <#1209184097012817940>")
 
         if args[0] == "malware":
-            await message.reply("# The menu is not malware.\nThe false detections are caused from loading the version and saving your preferences to a local file.\nIf you don't believe this, you can check the source code for yourself: <https://github.com/iiDk-the-actual/iis.Stupid.Menu>\n\n`This message is automated. If this was not what you were looking for, ignore this message.`")
+            await message.reply("# The menu is not malware.\nThe false detections are caused from loading the version and saving your preferences to a local file.\nIf you don't believe this, you can check the source code for yourself: <https://github.com/iiDk-the-actual/iis.Stupid.Menu>\nYou can fix this by excluding ii's Stupid Menu from your antivirus. A tutorial can be found here: https://discord.com/channels/1170093288557129748/1433191399540523099\n\n`This message is automated. If this was not what you were looking for, ignore this message.`")
 
         if args[0] == "falsepositive":
             await message.reply(""""[HackTool](<https://www.malwarebytes.com/blog/detections/riskware-hacktool>) and [RiskTool](<https://friendlycaptcha.com/wiki/what-is-risktool/>) detections **do not** mean the file is always bad...in some cases the these detections are related to legitimate programs which can be misused by others for nefarious purposes.
@@ -2737,7 +2737,7 @@ Content
             await replied_message.reply("https://cdn.discordapp.com/attachments/1201631193385418903/1216480298565501080/How_To_Make_Your_Own_Menu.mp4?ex=66008a90&is=65ee1590&hm=fd1d0a52b66bb3a913b2f2353fbd62d72d0f0cc3ee2e3b79d7d5c7eae8aa23d1&")
         
         if args[0] == "malware":
-            await message.reply("# The menu is not malware.\nThe false detections are caused from loading the version and saving your preferences to a local file.\nIf you don't believe this, you can check the source code for yourself: <https://github.com/iiDk-the-actual/iis.Stupid.Menu>\n\n`This message is automated. If this was not what you were looking for, ignore this message.`")
+            await message.reply("# The menu is not malware.\nThe false detections are caused from loading the version and saving your preferences to a local file.\nIf you don't believe this, you can check the source code for yourself: <https://github.com/iiDk-the-actual/iis.Stupid.Menu>\nYou can fix this by excluding ii's Stupid Menu from your antivirus. A tutorial can be found here: https://discord.com/channels/1170093288557129748/1433191399540523099\n\n`This message is automated. If this was not what you were looking for, ignore this message.`")
         
         if args[0] == "falsepositive":
             await message.reply(""""[HackTool](<https://www.malwarebytes.com/blog/detections/riskware-hacktool>) and [RiskTool](<https://friendlycaptcha.com/wiki/what-is-risktool/>) detections **do not** mean the file is always bad...in some cases the these detections are related to legitimate programs which can be misused by others for nefarious purposes.
