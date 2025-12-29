@@ -27,6 +27,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from collections import deque
 import subprocess
+import glob
 from discord import app_commands
 from datetime import timedelta, datetime, timezone
 
@@ -2956,9 +2957,17 @@ The **consensus among most experts** is that if **90%+** of the results of an on
                     await message.reply("No assets found in the latest release")
 
             except requests.exceptions.RequestException as e:
-                await message.reply(f"Failed to fetch the installer")
-            except requests.exceptions.Timeout:
-                await message.reply("Request timed out")
+				try:
+					files = glob.glob("/home/iiDk/Menu*.dll")
+					if not files:
+						return None
+					latest = max(files, key=os.path.getmtime)
+					version = os.path.splitext(os.path.basename(latest))[0].replace("Menu", "")
+					await message.reply(f"Here is the latest release of the menu ({version}):", file=discord.File({latest}))
+				except Exception as e:
+					await message.reply(f"We failed to fetch from GitHub, and tried falling back to local files. Unfortunetly, that failed too. Here is the error: {e}")
+			except requests.exceptions.Timeout:
+				await message.reply("Request timed out")
         
         if args[0] == "installer":
             try:
