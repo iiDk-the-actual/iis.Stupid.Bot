@@ -1287,8 +1287,8 @@ The **consensus among most experts** is that if **90%+** of the results of an on
 
             isBoyfriend = message.author.id == 1392621350249824486
 
-            if (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper or isAdmin or isStaffManager or isModerator or isCommunityHelper):
-                if message.channel.id == 1170852764725805148:
+            if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper or isAdmin or isStaffManager or isModerator or isCommunityHelper):
+                if isBoyfriend or message.channel.id == 1170852764725805148:
                     roleName = (
                         "Owner" if isOwner
                         else "Co-Owner" if isCoOwner
