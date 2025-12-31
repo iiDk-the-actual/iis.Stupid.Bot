@@ -551,7 +551,7 @@ async def on_message(message):
                 channels_used = user_message_tracker[user_id][content]
                 channels_used.add(channel_id)
 
-                if len(channels_used) >= 3:
+                if len(channels_used) >= 5:
                     dm_message = (
                         "Your account has been compromised and has sent content that is against the rules of the server. "
                         "Please secure your account by changing your passwords before joining back. "
