@@ -836,7 +836,6 @@ async def handleUserCommand(message):
 `membercount` Shows member count
 `usercount` Shows count of people using the menu in-game
 `elapsedtime` Shows how long bot has been up
-`wavyball` Returns an wavy response 
 `7ball` Returns an 7 ball response, usually a shitpost
 `8ball` Returns an 8 ball response
 `9ball` Returns a stupider 8 ball response
@@ -1049,24 +1048,6 @@ The **consensus among most experts** is that if **90%+** of the results of an on
             else:
                 await message.reply("The howgay command is only allowed in <#1170550524110721176>")
 
-        if args[0] == "wavyball":
-            await message.reply("🎱 " + random.choice([
-                "Wavy likes men :3",
-                "Wavy is a femboy :3",
-                ":3",
-                "Hi im wavy",
-                "https://cdn.discordapp.com/attachments/1191145721420845066/1382406919104364544/attachment.png?ex=684b0a45&is=6849b8c5&hm=9ed3c2b0eae32395ee4f064fccab3653b48abdaeffe452d505ea28c99b2a2b62&",
-                "https://cdn.discordapp.com/attachments/1257107211344285726/1382409002356441289/IMG_4088.PNG?ex=684b0c36&is=6849bab6&hm=d6bab0e2ddda002b9dd4c2b9771a1e0d2ebd1ea227c732d34aceff4122b2d391&",
-                "Certified wavy moment",
-                "Wavy",
-                "Wavy cheese",
-                "Back in my day, i used to yell at clouds 👴",
-                "https://cdn.discordapp.com/attachments/1257107211344285726/1382409486605615114/ezgif-2-c9545f922c.PNG?ex=684b0ca9&is=6849bb29&hm=222a2b3700e6ee0426652d8b097555fc9665c676b38133f20741dbd0ee7795f1&",
-                "Haiiiiiii :3",
-                "I love IHOP",
-                "The raising canes trip"
-            ]))
-
         if args[0] == "8ball":
             await message.reply("🎱 " + random.choice([
                 "It is certain.",
@@ -1239,7 +1220,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
         
         if args[0] == "gamble":
             if message.channel.id == 1170550524110721176:
-                await message.reply("The gamble command has been temporarily disabled")
+                await message.reply("The gamble command has been disabled")
                 """
                 symbols = ['🍒', '🍋', '🍊', '🍉']
                 probabilities = [0.06, 0.32, 0.31, 0.31]
@@ -1647,7 +1628,6 @@ async def handleCommand(message):
 `usercount` Shows count of people using the menu in-game
 `elapsedtime` Shows how long bot has been up
 `yn *[message]` Starts a yes/no poll
-`wavyball` Returns an wavy response
 `8ball` Returns an 8 ball response
 `9ball` Returns a stupider 8 ball response
 `coinflip` Flip a coin, see what it lands
@@ -1947,24 +1927,6 @@ Content
             if gaymeter == 100:
                 gayrole = client.guilds[0].get_role(1213700257989267567)
                 await message.author.add_roles(gayrole)
-
-        if args[0] == "wavyball":
-            await message.reply("🎱 " + random.choice([
-                "Wavy likes men :3",
-                "Wavy is a femboy :3",
-                ":3",
-                "Hi im wavy",
-                "https://cdn.discordapp.com/attachments/1191145721420845066/1382406919104364544/attachment.png?ex=684b0a45&is=6849b8c5&hm=9ed3c2b0eae32395ee4f064fccab3653b48abdaeffe452d505ea28c99b2a2b62&",
-                "https://cdn.discordapp.com/attachments/1257107211344285726/1382409002356441289/IMG_4088.PNG?ex=684b0c36&is=6849bab6&hm=d6bab0e2ddda002b9dd4c2b9771a1e0d2ebd1ea227c732d34aceff4122b2d391&",
-                "Certified wavy moment",
-                "Wavy",
-                "Wavy cheese",
-                "Back in my day, i used to yell at clouds 👴",
-                "https://cdn.discordapp.com/attachments/1257107211344285726/1382409486605615114/ezgif-2-c9545f922c.PNG?ex=684b0ca9&is=6849bb29&hm=222a2b3700e6ee0426652d8b097555fc9665c676b38133f20741dbd0ee7795f1&",
-                "Haiiiiiii :3",
-                "I love IHOP",
-                "The raising canes trip"
-            ]))
 
         if args[0] == "8ball":
             await message.reply("🎱 " + random.choice([
