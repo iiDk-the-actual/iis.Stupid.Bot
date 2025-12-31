@@ -11,7 +11,6 @@ import discord
 import asyncio
 import os
 import json
-from datetime import datetime
 import sys
 import time
 import yt_dlp
@@ -25,11 +24,14 @@ import aiohttp
 import requests
 import matplotlib.pyplot as plt
 import numpy as np
-from collections import deque
 import subprocess
 import glob
+
 from discord import app_commands
 from datetime import timedelta, datetime, timezone
+from collections import defaultdict
+from collections import deque
+from datetime import datetime
 
 TOKEN = ''
 privwhurl = ''
@@ -42,12 +44,15 @@ REMOVALIDS = []
 HARDBAN = []
 values = []
 last_execution_times = {}
+user_message_tracker = defaultdict(lambda: defaultdict(set))
+
+TIME_WINDOW = 60
+user_last_message_time = defaultdict(lambda: time.time())
 
 # Bad words, I support everyone and this is only for auto moderation
-bannedNameKeywords = ["nigger", "nigga", "nigg", "gigga", "fag", "faggot", "niger", "nigeria", "hitler", "kkk", "jews", "cracker", "fagget", "chink", "tranny", "iga", "igga", "igger", "iger", "trannies", "trany", "trannys", "tranies", "пigger", "пiggа", "пig", "卍", "卐", "pornhub.com", "e621.net", "xvideos", "onlyfans.com", "adolf", "hilter", "hitler", "ni99er", "migger", "migga", "childporn", "rape", "raped", "raping", "raper", "rapes", "niiger", "niig", "nig", "nega", "osama", "laden", "binladen", "osamabinladen", "blacky", "blackies"]
+bannedNameKeywords = ["nigger", "nigga", "nigg", "gigga", "fag", "faggot", "niger", "nigeria", "hitler", "kkk", "jews", "cracker", "fagget", "chink", "tranny", "iga", "niga", "igga", "igger", "iger", "trannies", "trany", "trannys", "tranies", "пigger", "пiggа", "пiga", "卍", "卐", "pornhub.com", "e621.net", "xvideos", "onlyfans.com", "adolf", "hilter", "hitler", "ni99er", "migger", "migga", "childporn", "rape", "raped", "raping", "raper", "rapes", "niiger", "niig", "nig", "nega", "osama", "laden", "binladen", "osamabinladen", "blacky", "blackies", "goy", "israel", "floyd"]
 blacklisted_mods = ["stupidmenu", "stupid_menu", "stupid menu", "prism", "shibagt", "shiba gt", "shiba-gt", "shiba_gt" "utilla", "sscosmetx", "cosmetxss", "sscosmetics", "sscosmeticx", "cosmeticsss", "cosmeticxss" "grate", "bark", "citrvs", "totalk", "to talk", "talk"]
 faqMessages = ['detected', 'kick', 'crash', 'lag', 'removed', 'watch', 'joystick', 'keybind', 'gui', ' ui ', 'sound', 'soundboard', 'master']
-doxxKeywords = []
 
 RAINBOW_COLORS = [
     0xFF3A3A,  # Red
@@ -104,13 +109,6 @@ try:
         privwhurl = file.read().strip() 
 except FileNotFoundError:
     print("Error: dynowh.txt not found.")
-
-try:
-    with open("doxxKeywords.txt", "r") as file:
-        doxxKeywords = [line.strip() for line in file if line.strip()]
-except FileNotFoundError:
-    print("Error: doxxKeywords.txt not found.")
-    doxxKeywords = []
 
 cosmeticdata = ""
 try:
@@ -436,8 +434,6 @@ async def on_message(message):
 
                     if 'ban' in message.content.lower():
                         asyncio.create_task(delete_later(await message.reply("Got banned? Purchase a new credential here: https://goldentrophy.software/"), 30))
-                    
-                await ProcessAntiDoxx(message)
 
                 try:
                     dll_attachments = [attachment for attachment in message.attachments if attachment.filename.lower().endswith('.dll')]
@@ -541,6 +537,39 @@ async def on_message(message):
                     names = ['member', 'creature', 'thing', 'thingamabob', 'annoyance', 'subject', 'test subject', 'guy', 'human', 'huwoman', 'living thing', 'individual', 'person', 'being', 'citizen', 'resident', 'inhabitant', 'folk', 'soul', 'character', 'figure', 'entity', 'participant', 'individualist', 'someone', 'somebody', 'human being']
                     servernames = ['emporium', 'server', 'place', 'park', 'talk place', 'talking place', 'text place', 'venue', 'location', 'site', 'establishment', 'premises', 'facility', 'enrichment center', 'hub', 'spot', 'depot', 'forum', 'platform', 'network', 'domain', 'kiosk', 'lounge', 'parlor', 'lobby']
                     await message.reply("Loyal "+random.choice(names)+" #"+str(client.guilds[0].member_count)+" has entered the "+random.choice(servernames))
+
+                user_id = message.author.id
+                content = message.content.strip().lower()
+                channel_id = message.channel.id
+                now = time.time()
+
+                if now - user_last_message_time[user_id] > TIME_WINDOW:
+                    user_message_tracker[user_id].clear()
+
+                user_last_message_time[user_id] = now
+
+                channels_used = user_message_tracker[user_id][content]
+                channels_used.add(channel_id)
+
+                if len(channels_used) >= 3:
+                    dm_message = (
+                        "Your account has been compromised and has sent content that is against the rules of the server. "
+                        "Please secure your account by changing your passwords before joining back. "
+                        "If you keep getting hacked, you have most likely downloaded malware and should do a fresh install of "
+                        "Windows or the operating system of your choice.\n"
+                        f"Flagged message: {content}\n\n"
+                        "https://discord.gg/iidk"
+                    )
+                    try:
+                        await message.author.send(dm_message)
+                    except:
+                        print("Oopsies")
+                        
+                    await message.author.kick(reason="Link spam detected a spam bot")
+                    await client.get_channel(1202085222632390686).send("Kicked scam bot <@" + str(user_id) + ">\nActioned mesage: " + str(content).replace("@", " @ "))
+
+                    user_message_tracker[user_id].clear()
+                    return
 
                 await handleUserCommand(message)
 
@@ -651,8 +680,6 @@ async def on_message_edit(oldmessage, message): # this is the EDIT
                             await message.reply("If you are experiencing issues with mods, try using our installer.\nHere is the menu installer (automatically installs the menu):", file=discord.File("installer.bat"))
                             #await message.author.timeout(timedelta(minutes=1), reason = "Auto timeout from rat word detection")
                             lastTimeRepliedDM = time.time() + 15
-                    
-                await ProcessAntiDoxx(message)
                 
                 if message.channel.id == 1170852764725805148: # post-code
                     if len(message.attachments) == 0:
@@ -3312,14 +3339,6 @@ async def delete_later(message, delay):
         await message.delete()
     except discord.NotFound:
         pass  # message already deleted
-
-async def ProcessAntiDoxx(message):
-    for doxxphrase in doxxKeywords:
-        if doxxphrase in str(message.content).lower():
-            await message.delete()
-            await message.author.send("<:middlefingercat:1190022668368482416>")
-            await message.author.ban(reason = "Sent personal information of me or friends")
-            await client.get_channel(1202085222632390686).send("<@" + str(owners[0]) + "> Doxx resurfaced by <@"+message.author.id+">\nMessage: "+message.content.replace("@", " @ "))
 
 async def download_file(url, dest):
     async with aiohttp.ClientSession() as session:
