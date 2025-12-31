@@ -1295,10 +1295,30 @@ The **consensus among most experts** is that if **90%+** of the results of an on
             isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
             isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
 
-            if (isDonor or isSupporter or isBasicTracker or isUltimateTracker):
+            isOwner = any(role.id == 1170116220855537754 for role in message.author.roles)
+            isCoOwner = any(role.id == 1432166270672830494 for role in message.author.roles)
+            isConsoleOwner = any(role.id == 1432183142093033582 for role in message.author.roles)
+            isMenuDeveloper = any(role.id == 1432167082123853826 for role in message.author.roles)
+            isAdmin = any(role.id == 1170116321388810411 for role in message.author.roles)
+            isStaffManager = any(role.id == 1246281245021962340 for role in message.author.roles)
+            isModerator = any(role.id == 1177487180453646387 for role in message.author.roles)
+            isCommunityHelper = any(role.id == 1207131095834038343 for role in message.author.roles)
+
+            isBoyfriend = message.author.id == 1392621350249824486
+
+            if (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper or isAdmin or isStaffManager or isModerator or isCommunityHelper):
                 if message.channel.id == 1170852764725805148:
                     roleName = (
-                        "Ultimate Tracker" if isUltimateTracker
+                        "Owner" if isOwner
+                        else "Co-Owner" if isCoOwner
+                        else "Console Owner" if isConsoleOwner
+                        else "Menu Developer" if isMenuDeveloper
+                        else "Boyfriend" if isBoyfriend
+                        else "Admin" if isAdmin
+                        else "Staff Manager" if isStaffManager
+                        else "Moderator" if isModerator
+                        else "Community Helper" if isCommunityHelper
+                        else "Ultimate Tracker" if isUltimateTracker
                         else "Basic Tracker" if isBasicTracker
                         else "Supporter" if isSupporter
                         else "Donor" if isDonor
@@ -2347,8 +2367,28 @@ Content
             isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
             isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
 
+            isOwner = any(role.id == 1170116220855537754 for role in message.author.roles)
+            isCoOwner = any(role.id == 1432166270672830494 for role in message.author.roles)
+            isConsoleOwner = any(role.id == 1432183142093033582 for role in message.author.roles)
+            isMenuDeveloper = any(role.id == 1432167082123853826 for role in message.author.roles)
+            isAdmin = any(role.id == 1170116321388810411 for role in message.author.roles)
+            isStaffManager = any(role.id == 1246281245021962340 for role in message.author.roles)
+            isModerator = any(role.id == 1177487180453646387 for role in message.author.roles)
+            isCommunityHelper = any(role.id == 1207131095834038343 for role in message.author.roles)
+
+            isBoyfriend = message.author.id == 1392621350249824486
+
             roleName = (
-                "Ultimate Tracker" if isUltimateTracker
+                "Owner" if isOwner
+                else "Co-Owner" if isCoOwner
+                else "Console Owner" if isConsoleOwner
+                else "Menu Developer" if isMenuDeveloper
+                else "Boyfriend" if isBoyfriend
+                else "Admin" if isAdmin
+                else "Staff Manager" if isStaffManager
+                else "Moderator" if isModerator
+                else "Community Helper" if isCommunityHelper
+                else "Ultimate Tracker" if isUltimateTracker
                 else "Basic Tracker" if isBasicTracker
                 else "Supporter" if isSupporter
                 else "Donor" if isDonor
@@ -2977,8 +3017,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
                     await message.reply(f"Here is the latest release of the menu ({version}):", file=discord.File(latest))
                 except Exception as e:
                     await message.reply(f"We failed to fetch from GitHub, and tried falling back to local files. Unfortunetly, that failed too. Here is the error: {e}")
-			
-        
+
         if args[0] == "installer":
             try:
                 await message.reply("Here is the menu installer (automatically installs the menu):", file=discord.File("installer.bat"))
