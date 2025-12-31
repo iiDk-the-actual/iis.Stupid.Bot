@@ -553,7 +553,7 @@ async def on_message(message):
 
                 if len(channels_used) >= 5:
                     dm_message = (
-                        "Your account has been compromised and has sent content that is against the rules of the server. "
+                        "Your account has been compromised and has sent messages in multiple channels in a short amount of time. "
                         "Please secure your account by changing your passwords before joining back. "
                         "If you keep getting hacked, you have most likely downloaded malware and should do a fresh install of "
                         "Windows or the operating system of your choice.\n"
