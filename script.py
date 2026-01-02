@@ -3407,7 +3407,7 @@ async def checkMemberName(member):
         print(f"Failed to fetch status: {e}")
 
     if violations:
-        await alert_channel.send(f"Bad member? <@&{alert_role_id}>\n"
+        await alert_channel.send(f"Bad member?\n"
                                  f"User: <@{str(member.id)}>\n"
                                  f"Violations: {', '.join(violations)}")
 
