@@ -1314,7 +1314,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
             isBoyfriend = message.author.id == 1392621350249824486
 
             if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper or isAdmin or isStaffManager or isModerator or isCommunityHelper):
-                if isBoyfriend or message.channel.id == 1449517795485286420:
+                if message.channel.id == 1449517795485286420:
                     roleName = (
                         "Owner" if isOwner
                         else "Co-Owner" if isCoOwner
@@ -1351,8 +1351,19 @@ The **consensus among most experts** is that if **90%+** of the results of an on
             isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
             isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
 
-            if (isDonor or isSupporter or isBasicTracker or isUltimateTracker):
-                if message.channel.id == 1170852764725805148:
+            isOwner = any(role.id == 1170116220855537754 for role in message.author.roles)
+            isCoOwner = any(role.id == 1432166270672830494 for role in message.author.roles)
+            isConsoleOwner = any(role.id == 1432183142093033582 for role in message.author.roles)
+            isMenuDeveloper = any(role.id == 1432167082123853826 for role in message.author.roles)
+            isAdmin = any(role.id == 1170116321388810411 for role in message.author.roles)
+            isStaffManager = any(role.id == 1246281245021962340 for role in message.author.roles)
+            isModerator = any(role.id == 1177487180453646387 for role in message.author.roles)
+            isCommunityHelper = any(role.id == 1207131095834038343 for role in message.author.roles)
+
+            isBoyfriend = message.author.id == 1392621350249824486
+
+            if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper or isAdmin or isStaffManager or isModerator or isCommunityHelper):
+                if message.channel.id == 1449517795485286420:
                     url = "https://iidk.online/removepatreon"
                     body = {"key": authenticationkey, "id": message.author.id}
                     
