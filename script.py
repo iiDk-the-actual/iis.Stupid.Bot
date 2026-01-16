@@ -292,7 +292,6 @@ async def on_ready():
 async def on_message(message):
     if not message.author.bot:
         if message.guild is None:
-            #if message.author.id in owners):
             print("[DM] " + str(message.author.name)+": "+str(message.content)+" in dms")
             if any(role.id in ADMINROLES for role in client.guilds[0].get_member(message.author.id).roles):
                 try:
@@ -1271,8 +1270,11 @@ The **consensus among most experts** is that if **90%+** of the results of an on
             await coolmsg.edit(content="Pong at `"+str(round((time.time()-loltimer)*1000))+"ms`")
 
         if args[0] == "generateimage":
+            await message.reply("The generateimage command has been disabled")
+            """
             generate_image(' '.join(args[1:]), "generateimage.png")
             await message.reply(file=discord.File("generateimage.png"))
+            """
         
         if args[0] == "yapper":
             first = client.get_user(int(get_userid_by_place(1)))
