@@ -3895,11 +3895,42 @@ def send_discord_webhook(webhook_url, message, embed):
     return response
 
 def get_userid_by_place(place):
+    try:
+        place_index = int(place) - 1
+    except Exception:
+        place_index = int(place) - 1
+
+    try:
+        guild = client.guilds[0]
+        member_ids = {str(m.id) for m in guild.members}
+        filtered = [(uid, cnt) for uid, cnt in message_counts.items() if uid in member_ids]
+        if len(filtered) > place_index:
+            sorted_items = sorted(filtered, key=lambda x: x[1], reverse=True)
+            return sorted_items[place_index][0]
+    except Exception:
+        pass
+
     sorted_items = sorted(message_counts.items(), key=lambda x: x[1], reverse=True)
-    return sorted_items[int(place)-1][0]
+    if 0 <= place_index < len(sorted_items):
+        return sorted_items[place_index][0]
+    return None
 
 def get_place_by_userid(userid):
     userid = str(userid)
+    try:
+        guild = client.guilds[0]
+        member_ids = {str(m.id) for m in guild.members}
+        sorted_items = sorted(
+            ((uid, cnt) for uid, cnt in message_counts.items() if uid in member_ids),
+            key=lambda x: x[1],
+            reverse=True
+        )
+        user_to_place = {user_id: index + 1 for index, (user_id, _) in enumerate(sorted_items)}
+        if userid in user_to_place:
+            return user_to_place.get(userid)
+    except Exception:
+        pass
+
     sorted_items = sorted(message_counts.items(), key=lambda x: x[1], reverse=True)
     user_to_place = {user_id: index + 1 for index, (user_id, _) in enumerate(sorted_items)}
     return user_to_place.get(userid, None)
