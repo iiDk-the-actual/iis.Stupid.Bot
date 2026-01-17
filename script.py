@@ -68,11 +68,11 @@ RAINBOW_COLOR_INDEX = -1
 LATEST_HASH = "?"
 
 owners = [
-    894348631904223232, # me
-    1317665262387986515, # me
-    1129786377643503687, # me
-    738573735895892050, # twig
-    252548095244500994 # king
+    894348631904223232, # crimsoncauldron
+    1129786377643503687, # golden.trophy (ii's alt)
+    1317665262387986515, # rocklobster
+    738573735895892050, # twigcore
+    252548095244500994 # kingofnetflix
 ]
 
 client = discord.Client(intents=discord.Intents.all())
