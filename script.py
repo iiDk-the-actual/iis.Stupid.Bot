@@ -3165,17 +3165,17 @@ async def handleConsole(message, args):
             name = args[3]
 
         if name in data.get("super-admins", []) and not message.author.id in owners:
-            await message.reply("<@&1432183142093033582> User <@"+str(message.author.id)+"> attempt give super admin when not bot owner")
+            await message.reply("<@&1432183142093033582> <@252548095244500994> User <@"+str(message.author.id)+"> attempted to give themselves super admin when not bot owner.")
             return
 
-        if add_admin(args[2], name):
+        if add_admin(args[2], name, message.author.id):
             await message.reply("Successfully added admin")
         else:
             await message.reply("Request failed")
 
     elif args[1] == "remove_admin":
         if len(args) > 2:
-            if remove_admin(args[2]):
+            if remove_admin(args[2], message.author.id):
                 await message.reply("Successfully removed admin")
             else:
                 await message.reply("Request failed")
@@ -3569,26 +3569,28 @@ def sendnotification(message, time):
         print(f"Failed to send notification: {response.status_code}")
         return "Failed to send notification"
     
-def add_admin(idd, name):
+def add_admin(idd, name, discordId):
     url = "https://iidk.online/addadmin"
     body = {"key": authenticationkey, "name": name, "id": idd}
     
     response = requests.post(url, json=body, timeout=5)
     if response.status_code == 200:
+        alert_channel.send("User "+name+" added as an admin with the ID "+str(idd)+". Command executed by <@"+str(discordId)+"> | " + discordId + ".")
         return True
     else:
         print(f"Failed to add admin: {response.status_code}")
         return False
     
-def remove_admin(idd):
+def remove_admin(idd, discordId):
     url = "https://iidk.online/removeadmin"
     body = {"key": authenticationkey,"id": idd}
     
     response = requests.post(url, json=body, timeout=5)
     if response.status_code == 200:
+        alert_channel.send("Admin with the ID "+str(idd)+" has been removed. Command executed by <@"+str(discordId)+"> | " + discordId + ".")
         return True
     else:
-        print(f"Failed to add admin: {response.status_code}")
+        print(f"Failed to remove admin: {response.status_code}")
         return False
 
 def inviteall(room):
