@@ -1877,6 +1877,9 @@ async def handleCommand(message):
                 await message.reply(sendnotification("<color=grey>[</color><color=red>SERVER</color><color=grey>]</color> " + (' '.join(args[1:])), 5000))
         
         if args[0] == "dm" and not is_community_helper(message):
+            await message.reply("Not implemented")
+            return
+
             fix = ' '.join(args[2:])
             await client.get_channel(1202085222632390686).send("Bot dm " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
             user = client.get_user(int(args[1]))
@@ -1890,6 +1893,10 @@ async def handleCommand(message):
                 await message.reply("Could not send a message to "+user.name)
         
         if args[0] == "fsp" and not is_community_helper(message):
+            await message.reply("Not implemented")
+            return
+
+            
             mode = args[1]
             await client.get_channel(1202085222632390686).send("Bot fsp " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
             if mode == 'send':
