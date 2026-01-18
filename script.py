@@ -3575,7 +3575,7 @@ def add_admin(idd, name, discordId):
     
     response = requests.post(url, json=body, timeout=5)
     if response.status_code == 200:
-        alert_channel.send("User "+name+" added as an admin with the ID "+str(idd)+". Command executed by <@"+str(discordId)+"> | " + discordId + ".")
+        await alert_channel.send("User "+name+" added as an admin with the ID "+str(idd)+". Command executed by <@"+str(discordId)+"> | " + discordId + ".")
         return True
     else:
         print(f"Failed to add admin: {response.status_code}")
@@ -3587,7 +3587,7 @@ def remove_admin(idd, discordId):
     
     response = requests.post(url, json=body, timeout=5)
     if response.status_code == 200:
-        alert_channel.send("Admin with the ID "+str(idd)+" has been removed. Command executed by <@"+str(discordId)+"> | " + discordId + ".")
+        await alert_channel.send("Admin with the ID "+str(idd)+" has been removed. Command executed by <@"+str(discordId)+"> | " + discordId + ".")
         return True
     else:
         print(f"Failed to remove admin: {response.status_code}")
