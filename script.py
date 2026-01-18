@@ -493,6 +493,7 @@ async def on_message(message):
                                                 patternsFound += ", " + pattern_names[i] 
                                     
                                     if hasFoundPatterns:
+                                        alert_channel = client.get_channel(1458530151318159421) # used to be mod chat 1170116209098895401
                                         await alert_channel.send("<@&1371627033574248478> Message attachment contain web requests / links in file\nDo not assume this is rat, have file checked in dnSpy / ilSpy\nKeywords: " + patternsFound + "\nUser who sent: <@" + str(message.author.id) + ">\nViolating message: https://discord.com/channels/"+str(client.guilds[0].id)+"/"+str(message.channel.id)+"/"+str(message.id))
                                         await message.add_reaction("🐀")
                                 finally:
@@ -516,6 +517,7 @@ async def on_message(message):
                                     isShitping = True
                             
                             if isShitping:
+                                alert_channel = client.get_channel(1458530151318159421) # used to be mod chat 1170116209098895401
                                 await alert_channel.send("<@&1256773412622434451> Member shitping\n\nUser who sent: <@" + str(message.author.id) + ">\nViolating message: https://discord.com/channels/"+str(client.guilds[0].id)+"/"+str(message.channel.id)+"/"+str(message.id))
                     except:
                         print("Failed to check for shitping")
@@ -756,6 +758,7 @@ async def on_member_remove(member):
     global leave_log
     leave_log.append(datetime.now(timezone.utc))
     if check_event(leave_log):
+        alert_channel = client.get_channel(1458530151318159421) # used to be mod chat 1170116209098895401
         await alert_channel.send("@here Raid? " + str(len(leave_log)) + " left in last 60 seconds")
 
 @client.event
@@ -763,13 +766,16 @@ async def on_member_ban(guild, user):
     global bans_log
     bans_log.append(datetime.now(timezone.utc))
     if check_event(bans_log):
+        alert_channel = client.get_channel(1458530151318159421) # used to be mod chat 1170116209098895401
         await alert_channel.send("@here Raid? " + str(len(bans_log)) + " banned in last 60 seconds")
     
 @client.event
 async def on_guild_role_create(role):
+    alert_channel = client.get_channel(1458530151318159421) # used to be mod chat 1170116209098895401
     await alert_channel.send("@here Role created: <@&" + role.id + ">")
 @client.event
 async def on_guild_role_delete(role):
+    alert_channel = client.get_channel(1458530151318159421) # used to be mod chat 1170116209098895401
     await alert_channel.send("@here Role deleted: " + role.name)
 
 @client.event
@@ -3589,6 +3595,7 @@ async def add_admin(idd, name, discordId):
     
     response = requests.post(url, json=body, timeout=5)
     if response.status_code == 200:
+        alert_channel = client.get_channel(1458530151318159421) # used to be mod chat 1170116209098895401
         await alert_channel.send("User "+name+" added as an admin with the ID "+str(idd)+". Command executed by <@"+str(discordId)+"> | " + discordId + ".")
         return True
     else:
@@ -3601,6 +3608,7 @@ async def remove_admin(idd, discordId):
     
     response = requests.post(url, json=body, timeout=5)
     if response.status_code == 200:
+        alert_channel = client.get_channel(1458530151318159421) # used to be mod chat 1170116209098895401
         await alert_channel.send("Admin with the ID "+str(idd)+" has been removed. Command executed by <@"+str(discordId)+"> | " + discordId + ".")
         return True
     else:
