@@ -3168,14 +3168,14 @@ async def handleConsole(message, args):
             await message.reply("<@&1432183142093033582> <@252548095244500994> User <@"+str(message.author.id)+"> attempted to give themselves super admin when not bot owner.")
             return
 
-        if add_admin(args[2], name, message.author.id):
+        if await add_admin(args[2], name, message.author.id):
             await message.reply("Successfully added admin")
         else:
             await message.reply("Request failed")
 
     elif args[1] == "remove_admin":
         if len(args) > 2:
-            if remove_admin(args[2], message.author.id):
+            if await remove_admin(args[2], message.author.id):
                 await message.reply("Successfully removed admin")
             else:
                 await message.reply("Request failed")
@@ -3569,7 +3569,7 @@ def sendnotification(message, time):
         print(f"Failed to send notification: {response.status_code}")
         return "Failed to send notification"
     
-def add_admin(idd, name, discordId):
+async def add_admin(idd, name, discordId):
     url = "https://iidk.online/addadmin"
     body = {"key": authenticationkey, "name": name, "id": idd}
     
@@ -3581,7 +3581,7 @@ def add_admin(idd, name, discordId):
         print(f"Failed to add admin: {response.status_code}")
         return False
     
-def remove_admin(idd, discordId):
+async def remove_admin(idd, discordId):
     url = "https://iidk.online/removeadmin"
     body = {"key": authenticationkey,"id": idd}
     
