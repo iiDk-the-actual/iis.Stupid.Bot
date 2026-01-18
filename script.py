@@ -1240,6 +1240,9 @@ The **consensus among most experts** is that if **90%+** of the results of an on
         if args[0] == "close":
             await close_thread(message)
 
+        if args[0] == "delete":
+            await delete_thread(message)
+
         if args[0] == "ping":
             await message.reply("Pong at `"+str(round(client.latency*1000))+"ms`")
         
@@ -3259,6 +3262,17 @@ async def close_thread(message):
                 await message.channel.edit(locked=True)
             
             await message.channel.send("This thread has been marked as solved and locked. <@"+str(message.channel.owner_id)+">")
+    else:
+        await message.reply("This channel is not a thread")
+
+async def delete_thread(message):
+    if isinstance(message.channel, discord.Thread):
+        forum_channel = message.channel.parent
+
+        is_owner = message.channel.owner_id == message.author.id or any(role.id in ADMINROLES for role in message.author.roles)
+
+        if is_owner:
+            message.channel.delete()
     else:
         await message.reply("This channel is not a thread")
 
