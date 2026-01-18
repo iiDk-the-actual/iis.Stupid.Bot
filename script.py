@@ -280,8 +280,8 @@ async def on_ready():
         else:
             await discord.utils.get(client.guilds[0].channels, id=1170093288989147329).send(f'Bot started in `{elapsed_time_ms:.2f}ms`')
         
-        await discord.utils.get(client.guilds[0].channels, id=1202085222632390686).send(content="Meme archive", file=discord.File("memes.txt"))
-        await discord.utils.get(client.guilds[0].channels, id=1202085222632390686).send(content="Yap archive", file=discord.File("yapdata.json"))
+        await discord.utils.get(client.guilds[0].channels, id=1458530151318159421).send(content="Meme archive", file=discord.File("memes.txt"))
+        await discord.utils.get(client.guilds[0].channels, id=1458530151318159421).send(content="Yap archive", file=discord.File("yapdata.json"))
     except:
         print("Could not announce bot start time")
         print(f'Bot started in `{elapsed_time_ms:.2f}ms`')
@@ -297,7 +297,7 @@ async def on_message(message):
                 try:
                     await handleCommand(message)
                 except Exception as e:
-                    await client.get_channel(1202085222632390686).send("Bot error with " + str(message.content) + ": " + str(e))
+                    await client.get_channel(1458530151318159421).send("Bot error with " + str(message.content) + ": " + str(e))
 
             else:
                 global lastTimeRepliedDM2BCIFUCKEDITUP # tomato
@@ -567,7 +567,7 @@ async def on_message(message):
                         print("Oopsies")
                         
                     await message.author.kick(reason="Link spam detected a spam bot")
-                    await client.get_channel(1202085222632390686).send("Kicked scam bot <@" + str(user_id) + ">\nActioned mesage: " + str(content).replace("@", " @ "))
+                    await client.get_channel(1458530151318159421).send("Kicked scam bot <@" + str(user_id) + ">\nActioned mesage: " + str(content).replace("@", " @ "))
 
                     user_message_tracker[user_id].clear()
                     return
@@ -804,7 +804,7 @@ async def on_automod_action(execution: discord.AutoModAction):
                         print("Oopsies")
                         
                     await member.kick(reason="AutoMod detected a scam bot")
-                    await client.get_channel(1202085222632390686).send("Kicked scam bot <@" + str(execution.user_id) + ">\nActioned mesage: " + str(message_content).replace("@", " @ "))
+                    await client.get_channel(1458530151318159421).send("Kicked scam bot <@" + str(execution.user_id) + ">\nActioned mesage: " + str(message_content).replace("@", " @ "))
                 except discord.Forbidden:
                     print(f"Insufficient permissions to kick {member}")
                 except Exception as e:
@@ -826,7 +826,7 @@ async def on_guild_join(guild):
 
 @client.event
 async def on_thread_create(thread):
-    await client.get_channel(1202085222632390686).send("New thread "+thread.jump_url+" created by "+thread.owner.mention)
+    await client.get_channel(1458530151318159421).send("New thread "+thread.jump_url+" created by "+thread.owner.mention)
     if thread.parent.id == 1202674710844801034:
         reply = f"||<@&1256773412622434451> <@&1207131095834038343>||\nHello {thread.owner.mention}, please stay in this thread and do not make duplicates. Make sure this post follows the reporting guidelines, pinned to the channel.\nFeel free to close this thread anytime with the .close command."
         await thread.send(reply)
@@ -1891,7 +1891,7 @@ async def handleCommand(message):
                 return
 
             fix = ' '.join(args[2:])
-            await client.get_channel(1202085222632390686).send("Bot dm " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
+            await client.get_channel(1458530151318159421).send("Bot dm " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
             user = client.get_user(int(args[1]))
             if user is None:
                 await message.reply("User "+args[1]+" does not exist")
@@ -1910,7 +1910,7 @@ async def handleCommand(message):
 
             
             mode = args[1]
-            await client.get_channel(1202085222632390686).send("Bot fsp " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
+            await client.get_channel(1458530151318159421).send("Bot fsp " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
             if mode == 'send':
                 channel_id = args[2]
                 message_content = ' '.join(args[3:])
@@ -3158,7 +3158,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
         """
 
 async def handleConsole(message, args):
-    await client.get_channel(1202085222632390686).send("Bot console " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
+    await client.get_channel(1458530151318159421).send("Bot console " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
 
     if args[1] == "add_admin":
         async with aiohttp.ClientSession() as session:
@@ -3177,14 +3177,14 @@ async def handleConsole(message, args):
             await message.reply("<@&1432183142093033582> <@252548095244500994> User <@"+str(message.author.id)+"> attempted to give themselves super admin when not bot owner.")
             return
 
-        if await add_admin(args[2], name, message.author.id):
+        if add_admin(args[2], name, message.author.id):
             await message.reply("Successfully added admin")
         else:
             await message.reply("Request failed")
 
     elif args[1] == "remove_admin":
         if len(args) > 2:
-            if await remove_admin(args[2], message.author.id):
+            if remove_admin(args[2], message.author.id):
                 await message.reply("Successfully removed admin")
             else:
                 await message.reply("Request failed")
@@ -3589,14 +3589,12 @@ def sendnotification(message, time):
         print(f"Failed to send notification: {response.status_code}")
         return "Failed to send notification"
     
-async def add_admin(idd, name, discordId):
+def add_admin(idd, name, discordId):
     url = "https://iidk.online/addadmin"
     body = {"key": authenticationkey, "name": name, "id": idd}
     
     response = requests.post(url, json=body, timeout=5)
     if response.status_code == 200:
-        alert_channel = client.get_channel(1458530151318159421) # used to be mod chat 1170116209098895401
-        await alert_channel.send("User "+name+" added as an admin with the ID "+str(idd)+". Command executed by <@"+str(discordId)+"> | " + discordId + ".")
         return True
     else:
         print(f"Failed to add admin: {response.status_code}")
@@ -3608,8 +3606,6 @@ async def remove_admin(idd, discordId):
     
     response = requests.post(url, json=body, timeout=5)
     if response.status_code == 200:
-        alert_channel = client.get_channel(1458530151318159421) # used to be mod chat 1170116209098895401
-        await alert_channel.send("Admin with the ID "+str(idd)+" has been removed. Command executed by <@"+str(discordId)+"> | " + discordId + ".")
         return True
     else:
         print(f"Failed to remove admin: {response.status_code}")
