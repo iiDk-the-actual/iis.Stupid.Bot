@@ -3158,7 +3158,8 @@ The **consensus among most experts** is that if **90%+** of the results of an on
         """
 
 async def handleConsole(message, args):
-    await client.get_channel(1458530151318159421).send("Bot console " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
+    channel = client.get_channel(1458530151318159421)
+    await channel.send("Bot console " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
 
     if args[1] == "add_admin":
         async with aiohttp.ClientSession() as session:
