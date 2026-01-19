@@ -431,8 +431,8 @@ async def on_message(message):
                     if founddaword:
                         await message.reply("Please read the frequently asked questions before continuing: <#1209184097012817940>")
 
-                    if 'ban' in message.content.lower():
-                        asyncio.create_task(delete_later(await message.reply("Got banned? Purchase a new credential here: https://goldentrophy.software/"), 30))
+                    #if 'ban' in message.content.lower():
+                    #    asyncio.create_task(delete_later(await message.reply("Got banned? Purchase a new credential here: https://goldentrophy.software/"), 30))
 
                 try:
                     dll_attachments = [attachment for attachment in message.attachments if attachment.filename.lower().endswith('.dll')]
