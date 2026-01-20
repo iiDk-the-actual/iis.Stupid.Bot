@@ -923,9 +923,15 @@ async def handleUserCommand(message):
             except Exception as e:
                 await message.reply("Failed to fetch the installer")
 
-        if args[0] == "av":
-            await message.reply(file=discord.File("av.mp4"))
-
+       if args[0] == "av":
+            target = message 
+            if message.reference and message.reference.message_id:
+                try:
+                    replied_msg = await message.channel.fetch_message(message.reference.message_id)
+                    target = replied_msg
+                except:
+                    pass
+            await target.reply("https://cdn.discordapp.com/attachments/1170116209098895401/1463217417126805536/av.mp4?ex=697106e9&is=696fb569&hm=5245d352ae9cb89dcc95c50bd4f8454acc4b24bc93906ef3ca2f6666c18a3006&")#file=discord.File("av.mp4"))
         if args[0] == "exclude":
             await message.reply(file=discord.File("exclude.mp4"))
 
@@ -1919,6 +1925,8 @@ async def handleCommand(message):
             #if message.author.id not in owners:
             #    await message.reply("Not implemented")
             #    return
+
+            message_content = ' '.join(args[3:])
 
             mode = args[1]
             await client.get_channel(1458530151318159421).send("Bot fsp " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
