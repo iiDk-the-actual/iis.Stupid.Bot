@@ -1920,13 +1920,6 @@ async def handleCommand(message):
             #    await message.reply("Not implemented")
             #    return
 
-            message_content = ' '.join(args[3:])
-            if (message_content.contains("@everyone") or message_content.contains("@here")):
-                return
-
-            if (message_content.startswith(blocked_command_prefixes) and message_content[1:] in blocked_commands):
-                return
-
             mode = args[1]
             await client.get_channel(1458530151318159421).send("Bot fsp " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
             if mode == 'send':
