@@ -184,21 +184,21 @@ async def my_background_task():
 
             await update_user_count()
 
-            try:
-                url_prefix = "https://goldentrophy.software/"
-                channel = client.get_channel(1183532196431134753)
+            #try:
+            #    url_prefix = "https://goldentrophy.software/"
+            #    channel = client.get_channel(1183532196431134753)
 
-                if channel is None:
-                    print("Channel not found.")
-                elif not isinstance(channel, discord.TextChannel):
-                    print("Invalid channel type.")
-                else:
-                    async for message in channel.history(limit=None, oldest_first=True):
-                        if message.content.startswith(url_prefix):
-                            await channel.send(message.content)
-                            await message.delete()
-            except:
-                print("Whoops")
+            #    if channel is None:
+            #        print("Channel not found.")
+            #    elif not isinstance(channel, discord.TextChannel):
+            #        print("Invalid channel type.")
+            #    else:
+            #        async for message in channel.history(limit=None, oldest_first=True):
+            #            if message.content.startswith(url_prefix):
+            #                await channel.send(message.content)
+            #                await message.delete()
+            #except:
+            #    print("Whoops")
 
             try:
                 global LATEST_HASH
@@ -926,8 +926,8 @@ async def handleUserCommand(message):
         if args[0] == "patreon":
             await message.reply("The Patreon page can be found here: <https://patreon.com/iiDk>")
 
-        if args[0] == "banned":
-            asyncio.create_task(delete_later(await message.reply("Got banned? Purchase a new credential here: https://goldentrophy.software/"), 30))
+        #if args[0] == "banned":
+        #    asyncio.create_task(delete_later(await message.reply("Got banned? Purchase a new credential here: https://goldentrophy.software/"), 30))
 
         if args[0] == "tracker":
             isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
@@ -3041,8 +3041,8 @@ The **consensus among most experts** is that if **90%+** of the results of an on
         if args[0] == "patreon":
             await message.reply("The Patreon page can be found here: <https://patreon.com/iiDk>")
 
-        if args[0] == "banned":
-            asyncio.create_task(delete_later(await message.reply("Got banned? Purchase a new credential here: https://goldentrophy.software/"), 30))
+        #if args[0] == "banned":
+        #    asyncio.create_task(delete_later(await message.reply("Got banned? Purchase a new credential here: https://goldentrophy.software/"), 30))
 
         if args[0] == "tracker":
             isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
