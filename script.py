@@ -1902,18 +1902,36 @@ async def handleCommand(message):
             except:
                 await message.reply("Could not send a message to "+user.name)
         
+        blocked_command_prefixes = ("?", "!", "/", ".")
+
+        blocked_commands = [
+            "ban",
+            "kick",
+            "role",
+            "mute",
+            "unmute",
+            "timeout",
+            "purge",
+        ]
+
         if args[0] == "fsp" and not is_community_helper(message):
 
-            if message.author.id not in owners:
-                await message.reply("Not implemented")
+            #if message.author.id not in owners:
+            #    await message.reply("Not implemented")
+            #    return
+
+            message_content = ' '.join(args[3:])
+            if (message_content.contains("@everyone") or message_content.contains("@here")):
                 return
 
-            
+            if (message_content.startswith(blocked_command_prefixes) and message_content[1:] in blocked_commands):
+                return
+
             mode = args[1]
             await client.get_channel(1458530151318159421).send("Bot fsp " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
             if mode == 'send':
                 channel_id = args[2]
-                message_content = ' '.join(args[3:])
+                
                 channel = client.get_channel(int(channel_id))
                 if channel is None:
                     await message.reply("Channel not found")
@@ -1922,7 +1940,6 @@ async def handleCommand(message):
                 await message.reply(f"Message sent to channel <#{channel_id}>")
             elif mode == 'reply':
                 channel_id, message_id = args[2].split('@')
-                message_content = ' '.join(args[3:])
                 channel = client.get_channel(int(channel_id))
                 if channel is None:
                     await message.reply("Channel not found")
