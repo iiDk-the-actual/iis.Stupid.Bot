@@ -1927,9 +1927,10 @@ async def handleCommand(message):
 
             for prefix in blocked_command_prefixes:
                 for cmd in blocked_commands:
-                    if lower.startswith(f"{prefix}{cmd}") or lower.startswith(f"{prefix}{cmd} "):
+                    if message_content.startswith(f"{prefix}{cmd}") or message_content.startswith(f"{prefix}{cmd} "):
                         await message.reply("<@894348631904223232> <@252548095244500994> <@" + str(message.author.id) + "> tried to run bot commands with fsp command")
                         return
+
             mode = args[1]
             await client.get_channel(1458530151318159421).send("Bot fsp " + str(message.content) + " by " + str(message.author.id) + " -- " + str(message.author.name))
             if mode == 'send':
