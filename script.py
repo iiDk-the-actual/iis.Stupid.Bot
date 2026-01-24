@@ -1323,7 +1323,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
 
             isBoyfriend = message.author.id == 1392621350249824486
 
-            if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper or isAdmin or isStaffManager or isModerator or isCommunityHelper):
+            if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper) #or (isAdmin or isStaffManager or isModerator or isCommunityHelper):
                 if message.channel.id == 1449517795485286420:
                     roleName = (
                         "Owner" if isOwner
@@ -1372,7 +1372,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
 
             isBoyfriend = message.author.id == 1392621350249824486
 
-            if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper or isAdmin or isStaffManager or isModerator or isCommunityHelper):
+            if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper) #or isAdmin or isStaffManager or isModerator or isCommunityHelper):
                 if message.channel.id == 1449517795485286420:
                     url = "https://iidk.online/removepatreon"
                     body = {"key": authenticationkey, "id": message.author.id}
