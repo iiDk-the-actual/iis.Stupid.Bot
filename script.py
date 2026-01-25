@@ -744,9 +744,15 @@ async def on_member_update(before: discord.Member, after: discord.Member):
 
     try:
         if before.activity != after.activity or before.name != after.name or before.global_name != after.global_name:
-            await checkMemberName(after)
+            await checkMemberName(after.id)
     except:
         print("Faliure in checking name")
+    
+    try:
+        await updatePatreonMember(after.id, after.roles)
+    except:
+        print("Failed to update patreon member roles. User ID: "+str(after.id) + " Name: "+str(after.name))
+            
 
 @client.event
 async def on_member_remove(member):
@@ -763,6 +769,10 @@ async def on_member_remove(member):
 
 @client.event
 async def on_member_ban(guild, user):
+    url = "https://iidk.online/removepatreon"
+    body = {"key": authenticationkey, "id": message.author.id}
+    
+    response = requests.post(url, json=body, timeout=5)
     global bans_log
     bans_log.append(datetime.now(timezone.utc))
     if check_event(bans_log):
@@ -1323,7 +1333,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
 
             isBoyfriend = message.author.id == 1392621350249824486
 
-            if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper) #or (isAdmin or isStaffManager or isModerator or isCommunityHelper):
+            if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper): #or (isAdmin or isStaffManager or isModerator or isCommunityHelper):
                 if message.channel.id == 1449517795485286420:
                     roleName = (
                         "Owner" if isOwner
@@ -1372,7 +1382,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
 
             isBoyfriend = message.author.id == 1392621350249824486
 
-            if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper) #or isAdmin or isStaffManager or isModerator or isCommunityHelper):
+            if isBoyfriend or (isDonor or isSupporter or isBasicTracker or isUltimateTracker) or (isOwner or isCoOwner or isConsoleOwner or isMenuDeveloper): #or isAdmin or isStaffManager or isModerator or isCommunityHelper):
                 if message.channel.id == 1449517795485286420:
                     url = "https://iidk.online/removepatreon"
                     body = {"key": authenticationkey, "id": message.author.id}
@@ -3245,6 +3255,81 @@ async def handleConsole(message, args):
             await message.reply("Please provide a name to search for")
             return
 
+async def updatePatreonMember(id_to_remove, newRoles):
+    async with aiohttp.ClientSession() as session:
+        async with session.get("https://iidk.online/serverdata") as resp:
+            if resp.status != 200:
+                return False
+
+            data = await resp.json()
+
+        patreons = data.get("patreon", [])
+
+        matching_entries = [
+            p for p in patreons
+            if p["discord-id"] == id_to_remove
+        ]
+
+        if not matching_entries:
+            return False
+
+        stored_id = matching_entries[0]["user-id"]
+
+        def get_priority_role():
+            isDonor = any(role.id == 1354610628580347944 for role in newRoles)
+            isSupporter = any(role.id == 1354611031141253211 for role in newRoles)
+            isBasicTracker = any(role.id == 1354611211047665822 for role in newRoles)
+            isUltimateTracker = any(role.id == 1354611423463866368 for role in newRoles)
+
+            isOwner = any(role.id == 1170116220855537754 for role in newRoles)
+            isCoOwner = any(role.id == 1432166270672830494 for role in newRoles)
+            isConsoleOwner = any(role.id == 1432183142093033582 for role in newRoles)
+            isMenuDeveloper = any(role.id == 1432167082123853826 for role in newRoles)
+            isAdmin = any(role.id == 1170116321388810411 for role in newRoles)
+            isStaffManager = any(role.id == 1246281245021962340 for role in newRoles)
+            isModerator = any(role.id == 1177487180453646387 for role in newRoles)
+            isCommunityHelper = any(role.id == 1207131095834038343 for role in newRoles)
+
+            # priority
+            return (
+                "Owner" if isOwner
+                else "Co-Owner" if isCoOwner
+                else "Console Owner" if isConsoleOwner
+                else "Menu Developer" if isMenuDeveloper
+                else "Boyfriend" if id_to_remove == 1392621350249824486  
+                else "Admin" if isAdmin
+                else "Staff Manager" if isStaffManager
+                else "Moderator" if isModerator
+                else "Community Helper" if isCommunityHelper
+                else "Ultimate Tracker" if isUltimateTracker
+                else "Basic Tracker" if isBasicTracker
+                else "Supporter" if isSupporter
+                else "Donor" if isDonor
+                else "Null"
+            )
+
+        new_role_name = get_priority_role()
+
+        remove_url = "https://iidk.online/removepatreon"
+        remove_body = {"key": authenticationkey, "id": id_to_remove}
+        async with session.post(remove_url, json=remove_body, timeout=5) as resp:
+            if resp.status != 200:
+                return False
+
+        if new_role_name != "Null":
+            add_url = "https://iidk.online/addpatreon"
+            add_body = {
+                "key": authenticationkey,
+                "id": stored_id,
+                "discord": id_to_remove,
+                "name": new_role_name,
+                "icon": message.author.avatar.url
+            }
+            requests.post(add_url, json=add_body, timeout=5)
+            
+
+        return True
+        
 async def handleBlacklist(message, args):
     if (len(args) >= 2):
         if args[1] == "get":
