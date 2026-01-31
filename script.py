@@ -749,7 +749,7 @@ async def on_member_update(before: discord.Member, after: discord.Member):
         print("Faliure in checking name")
     
     try:
-        await updatePatreonMember(after.id, after.roles)
+        await updatePatreonMember(after.id, after.roles, after.avatar.url)
     except:
         print("Failed to update patreon member roles. User ID: "+str(after.id) + " Name: "+str(after.name))
             
@@ -770,7 +770,7 @@ async def on_member_remove(member):
 @client.event
 async def on_member_ban(guild, user):
     url = "https://iidk.online/removepatreon"
-    body = {"key": authenticationkey, "id": message.author.id}
+    body = {"key": authenticationkey, "id": user.id}
     
     response = requests.post(url, json=body, timeout=5)
     global bans_log
@@ -1499,6 +1499,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
                 await message.reply("**You do not have the Ultimate Tracker.**\nSubscribe to the Patreon to get the role: <https://patreon.com/iiDk>")
             
         if args[0] == "lookupid":
+            isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
             isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
 
             if isUltimateTracker:
@@ -1517,8 +1518,24 @@ The **consensus among most experts** is that if **90%+** of the results of an on
                             await message.reply(replyText)
                     else:
                         await message.reply("No data found")
+            elif isBasicTracker:
+                if message.channel.id != 1354612130745290767: # basic-tracker
+                    await message.reply("This command only works in the <#1354612130745290767> channel")
+                else:
+                    data = fetch_data()
+                    if data:
+                        replyText = "```\n" + search_uid(data, args[1].upper()) + "\n```"
+                        if len(replyText) > 2000:
+                            with open("lookupid.txt", 'w') as file:
+                                file.write(replyText)
+                                    
+                            await message.reply(file=discord.File("lookupid.txt"))
+                        else:
+                            await message.reply(replyText)
+                    else:
+                        await message.reply("No data found")
             else:
-                await message.reply("**You do not have the Ultimate Tracker.**\nSubscribe to the Patreon to get the role: <https://patreon.com/iiDk>")
+                await message.reply("**You do not have the Basic or Ultimate Tracker.**\nSubscribe to the Patreon to get the role: <https://patreon.com/iiDk>")
 
         if args[0] == "lookupdb":
             isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
@@ -1596,6 +1613,7 @@ The **consensus among most experts** is that if **90%+** of the results of an on
                 await message.reply("**You do not have the Ultimate Tracker les.**\nSubscribe to the Patreon to get the role: <https://patreon.com/iiDk>")
         
         if args[0] == "getallrooms":
+            isBasicTracker = any(role.id == 1354611211047665822 for role in message.author.roles)
             isUltimateTracker = any(role.id == 1354611423463866368 for role in message.author.roles)
 
             if isUltimateTracker:
@@ -1614,8 +1632,24 @@ The **consensus among most experts** is that if **90%+** of the results of an on
                             await message.reply(replyText)
                     else:
                         await message.reply("No data found")
+            elif isBasicTracker:
+                if message.channel.id != 1354612130745290767: # basic-tracker
+                    await message.reply("This command only works in the <#1354612130745290767> channel")
+                else:
+                    data = fetch_data()
+                    if data:
+                        replyText = "```\n" + get_all_rooms(data) + "\n```"
+                        if len(replyText) > 2000:
+                            with open("getallrooms.txt", 'w') as file:
+                                file.write(replyText)
+                                    
+                            await message.reply(file=discord.File("getallrooms.txt"))
+                        else:
+                            await message.reply(replyText)
+                    else:
+                        await message.reply("No data found")
             else:
-                await message.reply("**You do not have the Ultimate Tracker.**\nSubscribe to the Patreon to get the role: <https://patreon.com/iiDk>")
+                await message.reply("**You do not have the Basic or Ultimate Tracker.**\nSubscribe to the Patreon to get the role: <https://patreon.com/iiDk>")
 
         if args[0] == "whatis":
             response = "No cosmetics found"
@@ -3255,7 +3289,7 @@ async def handleConsole(message, args):
             await message.reply("Please provide a name to search for")
             return
 
-async def updatePatreonMember(id_to_remove, newRoles):
+async def updatePatreonMember(id_to_remove, newRoles, avatar):
     async with aiohttp.ClientSession() as session:
         async with session.get("https://iidk.online/serverdata") as resp:
             if resp.status != 200:
@@ -3323,7 +3357,7 @@ async def updatePatreonMember(id_to_remove, newRoles):
                 "id": stored_id,
                 "discord": id_to_remove,
                 "name": new_role_name,
-                "icon": message.author.avatar.url
+                "icon": avatar
             }
             requests.post(add_url, json=add_body, timeout=5)
             
